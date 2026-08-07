@@ -336,7 +336,7 @@ install_desktop() {
                 ;;
             "kde")
                 sudo pacman -S --noconfirm plasma-meta konsole dolphin kdeconnect partitionmanager ark
-                sudo systemctl enable sddm
+                sudo systemctl enable plasmalogin
                 ;;
             "cosmic")
                 sudo pacman -S --noconfirm cosmic-session cosmic-terminal cosmic-files cosmic-store cosmic-wallpapers
