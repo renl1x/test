@@ -116,7 +116,7 @@ install_base() {
         sudo systemctl enable chrony
         sudo systemctl start chrony
     elif [[ "$distro" == "arch" ]]; then
-        sudo pacman -S --noconfirm apparmor podman fastfetch gamemode yay topgrade
+        sudo pacman -S --noconfirm apparmor podman fastfetch gamemode yay topgrade alacritty
         sudo systemctl enable apparmor
         sudo systemctl start apparmor
     fi
@@ -370,6 +370,29 @@ __GL_SHADER_DISK_CACHE_SIZE=12000000000
 EOF
 }
 
+setup_topgrade_icon() {
+    local distro=$(cat "$STATE_DIR/distro")
+
+    if [[ "$distro" != "arch" ]]; then
+        return
+    fi
+
+    mkdir -p "$HOME/.local/share/applications"
+
+    cat > "$HOME/.local/share/applications/topgrade.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Topgrade
+Comment=Atualizar todos os pacotes e sistemas
+Exec=sh -c "alacritty -e bash -c 'topgrade; echo; read -p \"Pressione ENTER para fechar...\"'"
+Icon=system-software-update
+Terminal=false
+Categories=System;Utility;
+EOF
+
+    echo "${GREEN}Ícone do Topgrade criado no menu de aplicativos.${NC}"
+}
+
 remove_packages() {
     local distro=$(cat "$STATE_DIR/distro")
     
@@ -406,6 +429,7 @@ main() {
     setup_btrfs_compression
     setup_package_managers
     setup_performance_vars
+    setup_topgrade_icon
     remove_packages
     ask_reboot
 }
